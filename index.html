@@ -2,14 +2,15 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>八星磁場分析 - Apple Pro Edition</title>
-    <!-- 引入外部 CSS 樣式表 -->
+    <!-- 引入外部 CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="app-container">
+    
     <!-- 歷史紀錄面板 -->
     <div id="historyPanel" class="history-panel">
         <div class="history-header">
@@ -19,24 +20,25 @@
                 <button class="close-history-btn" id="btn-close-history" style="margin-left: 10px;">✕</button>
             </div>
         </div>
-        <!-- 歷史紀錄清單，由 JS 動態生成 -->
         <div id="historyList" class="history-list"></div>
     </div>
 
-    <!-- 頂部控制區 -->
-    <div class="top-left-controls">
-        <button class="icon-btn" id="btn-open-history" title="搜尋歷史">🕒</button>
-    </div>
-    <div class="top-right-controls">
-        <button class="icon-btn" id="builderToggleBtn" title="開啟智慧選號模式">🎯</button>
-        <button class="icon-btn" id="themeToggleBtn" title="切換深淺模式">🌙</button>
-    </div>
-
-    <!-- 標題與輸入框 -->
+    <!-- 頂部控制區與標題合併 (Navbar 結構) -->
     <div class="top-section">
-        <div class="header">
-            <h1>數字磁場分析</h1>
-            <p>Pro Edition</p>
+        <div class="navbar">
+            <div class="nav-left">
+                <button class="icon-btn" id="btn-open-history" title="搜尋歷史">🕒</button>
+            </div>
+            
+            <div class="header">
+                <h1>數字磁場分析</h1>
+                <p>Pro Edition</p>
+            </div>
+            
+            <div class="nav-right">
+                <button class="icon-btn" id="builderToggleBtn" title="開啟智慧選號模式">🎯</button>
+                <button class="icon-btn" id="themeToggleBtn" title="切換深淺模式">🌙</button>
+            </div>
         </div>
         
         <div class="input-card">
@@ -47,9 +49,8 @@
         </div>
     </div>
 
-    <!-- 中間滑動區與分析結果 -->
+    <!-- 滑動內容區 -->
     <div class="scroll-area">
-        <!-- 智慧配號面板 -->
         <div id="builderPanel" class="builder-panel">
             <div class="builder-row">
                 <span class="builder-label">限制目標長度 (字數)</span>
@@ -62,10 +63,8 @@
 
         <div id="conversionHint" class="conversion-hint"></div>
         
-        <!-- 卡片清單區域 -->
         <div id="resultList"></div>
         
-        <!-- 統計與流向 -->
         <div id="statsArea" class="stats-card">
             <span class="stats-text-primary" id="statRatio">📊 吉 0% / 凶 0%</span>
             <span class="stats-text-secondary" id="statFlow">🔄 -</span>
@@ -91,7 +90,7 @@
     </div>
 </div>
 
-<!-- 引入外部 JavaScript 檔案 -->
+<!-- 引入外部 JS -->
 <script src="app.js"></script>
 </body>
 </html>
