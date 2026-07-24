@@ -88,6 +88,7 @@ body {
     justify-content: space-between;
     margin-bottom: 16px;
     width: 100%;
+    position: relative; /* 💡 絕對置中標題的基準點 */
 }
 
 .nav-left, .nav-right {
@@ -106,16 +107,19 @@ body {
 .icon-btn:active { transform: scale(0.9); }
 .icon-btn.active { background: var(--accent-color); color: #FFFFFF; }
 
-/* --- 標題排版修改 --- */
+/* --- 標題排版：強制畫面正中央 --- */
 .header { 
     display: flex; 
-    flex-direction: column; /* 讓內容垂直排列 */
-    align-items: center;    /* 讓兩行文字水平置中 */
+    flex-direction: column; 
+    align-items: center;    
     justify-content: center; 
-    gap: 2px;               /* 主標題與副標題的間距 */
+    gap: 2px;               
     margin: 0; 
-    flex-grow: 1;
-    overflow: hidden;
+    /* 💡 絕對置中設定：不受左右按鈕數量影響 */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content; 
 }
 
 .header h1 { 
@@ -136,7 +140,6 @@ body {
     white-space: nowrap; 
     flex-shrink: 0;
 }
-/* -------------------- */
 
 /* ========== 搜尋輸入框 ========== */
 .input-card { background: var(--card-bg); padding: 8px; border-radius: 14px; box-shadow: var(--shadow-sm); }
@@ -165,7 +168,7 @@ input::placeholder { color: #A1A1A6; font-weight: 500; }
     overflow-y: auto; 
     padding: 4px 16px; 
     scrollbar-width: none; 
-    -webkit-overflow-scrolling: touch; /* 優化 iOS 滑動體驗 */
+    -webkit-overflow-scrolling: touch; 
 }
 .scroll-area::-webkit-scrollbar { display: none; }
 
