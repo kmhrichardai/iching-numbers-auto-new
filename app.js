@@ -30,7 +30,14 @@ let builderActive = false;
 let activeStars = ['天醫', '生氣', '延年', '伏位'];
 let prevValidRaw = ''; 
 let saveHistoryTimeout = null;
-let searchHistory = JSON.parse(localStorage.getItem('magnetic_history') || '[]');
+
+// 初始化 localStorage (增加 try...catch)
+let searchHistory = [];
+try {
+    searchHistory = JSON.parse(localStorage.getItem('magnetic_history') || '[]');
+} catch(e) {
+    console.warn('LocalStorage error', e);
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     renderHistory();
