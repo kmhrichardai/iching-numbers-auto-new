@@ -1,4 +1,3 @@
-// === 資料庫設定 ===
 const stars = {
     "天醫": { levels: { "1級": ["13","31"], "2級": ["68","86"], "3級": ["49","94"], "4級": ["27","72"] }, type: "吉" },
     "生氣": { levels: { "1級": ["14","41"], "2級": ["67","76"], "3級": ["39","93"], "4級": ["28","82"] }, type: "吉" },
@@ -16,7 +15,6 @@ const letterMap = {
     'S':1, 'T':2, 'U':3, 'V':4, 'W':5, 'X':6, 'Y':7, 'Z':8
 };
 
-// === DOM 快取與狀態 ===
 const input = document.getElementById('numInput');
 const clearBtn = document.getElementById('clearBtn');
 const list = document.getElementById('resultList');
@@ -32,20 +30,11 @@ let builderActive = false;
 let activeStars = ['天醫', '生氣', '延年', '伏位'];
 let prevValidRaw = ''; 
 let saveHistoryTimeout = null;
+let searchHistory = JSON.parse(localStorage.getItem('magnetic_history') || '[]');
 
-// 安全初始化 LocalStorage
-let searchHistory = [];
-try {
-    searchHistory = JSON.parse(localStorage.getItem('magnetic_history') || '[]');
-} catch (e) {
-    searchHistory = [];
-}
-
-// === 系統初始化與事件綁定 ===
 document.addEventListener('DOMContentLoaded', () => {
     renderHistory();
 
-    // 靜態 UI 綁定
     document.getElementById('btn-open-history').addEventListener('click', toggleHistory);
     document.getElementById('btn-close-history').addEventListener('click', toggleHistory);
     document.getElementById('btn-clear-history').addEventListener('click', clearAllHistory);
@@ -54,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-copy').addEventListener('click', copyResult);
     clearBtn.addEventListener('click', clearInput);
 
-    // 輸入監聽
     input.addEventListener('input', () => {
         clearBtn.style.display = input.value.length > 0 ? 'flex' : 'none';
         updateAnalysis();
@@ -62,14 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('builderMaxLen').addEventListener('change', updateAnalysis);
     
-    // 模式選擇
     modeSelect.addEventListener('change', (e) => {
         triggerHaptic();
         currentMode = e.target.value;
         formattedDisplay.innerText = currentCopyTexts[currentMode] || '';
     });
 
-    // 事件委派：歷史紀錄操作
     document.getElementById('historyList').addEventListener('click', (e) => {
         const delBtn = e.target.closest('.history-del-btn');
         if (delBtn) {
@@ -83,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 事件委派：智慧選號膠囊
     document.getElementById('starPills').addEventListener('click', (e) => {
         const pill = e.target.closest('.pill');
         if (pill && pill.dataset.star) {
@@ -91,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 事件委派：建議按鈕輸入
     document.getElementById('builderSuggestions').addEventListener('click', (e) => {
         const btn = e.target.closest('.suggest-btn');
         if (btn && btn.dataset.char) {
@@ -99,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 事件委派：卡片展開
     list.addEventListener('click', (e) => {
         const item = e.target.closest('.result-item');
         if (item) {
@@ -108,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// === 輔助與 UI 功能 ===
 function escapeHTML(str) {
     return str.replace(/[&<>'"]/g, 
         tag => ({
@@ -140,7 +122,6 @@ function triggerHaptic() {
     if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(10);
 }
 
-// === 歷史紀錄邏輯 ===
 function toggleHistory() {
     triggerHaptic();
     document.getElementById('historyPanel').classList.toggle('show');
@@ -154,7 +135,11 @@ function saveToHistory(val) {
     searchHistory.unshift(cleanVal);
     if (searchHistory.length > 50) searchHistory.pop();
     
-    localStorage.setItem('magnetic_history', JSON.stringify(searchHistory));
+    try {
+        localStorage.setItem('magnetic_history', JSON.stringify(searchHistory));
+    } catch(e) {
+        console.warn('LocalStorage error', e);
+    }
     renderHistory();
 }
 
@@ -167,14 +152,22 @@ function loadHistoryItem(val) {
 
 function deleteHistoryItem(val) {
     searchHistory = searchHistory.filter(item => item !== val);
-    localStorage.setItem('magnetic_history', JSON.stringify(searchHistory));
+    try {
+        localStorage.setItem('magnetic_history', JSON.stringify(searchHistory));
+    } catch(e) {
+        console.warn('LocalStorage error', e);
+    }
     renderHistory();
 }
 
 function clearAllHistory() {
     if(confirm("確定要刪除所有搜尋紀錄嗎？")) {
         searchHistory = [];
-        localStorage.setItem('magnetic_history', '[]');
+        try {
+            localStorage.setItem('magnetic_history', '[]');
+        } catch(e) {
+            console.warn('LocalStorage error', e);
+        }
         renderHistory();
     }
 }
@@ -196,7 +189,6 @@ function renderHistory() {
     }).join('');
 }
 
-// === 智慧配號邏輯 ===
 function toggleBuilder() {
     triggerHaptic();
     builderActive = !builderActive;
@@ -244,7 +236,6 @@ function clearInput() {
     input.focus();
 }
 
-// === 核心運算分析 ===
 function updateAnalysis() {
     let rawStr = input.value.toUpperCase();
     let cleanedRaw = rawStr.replace(/[^A-Z0-9]/g, ''); 
@@ -477,7 +468,6 @@ function generateDataAndStats(originalStr, convertedStr, pairs) {
     formattedDisplay.innerText = currentCopyTexts[currentMode];
 }
 
-// === 剪貼簿與 Toast 邏輯 ===
 function showToast(message) {
     const existingToast = document.getElementById('ios-toast');
     if (existingToast) existingToast.remove();
